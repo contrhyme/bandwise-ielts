@@ -1,0 +1,497 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>Bandwise IELTS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: answer-sheet app — sticky top bar, one centered column (max 760px), task cards, bottom-free */
+:root{
+  --bg:#F3F5FA; --surface:#FFFFFF; --sunk:#E8ECF5; --line:#D3D9E6;
+  --ink:#141A2E; --muted:#5A6378; --accent:#2B3FD6; --accent-ink:#FFFFFF; --accent-soft:#E3E7FD;
+  --band:#F5B82E; --band-ink:#3A2A00;
+  --ok:#11845B; --ok-soft:#DDF3EA; --bad:#C23A3A; --bad-soft:#FBE4E4; --warn:#A86A00;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1222; --surface:#171C31; --sunk:#10152A; --line:#2A3150;
+  --ink:#E8EBF5; --muted:#99A1B9; --accent:#7D8CFF; --accent-ink:#0E1222; --accent-soft:#232B55;
+  --band:#F5B82E; --band-ink:#2A1E00;
+  --ok:#4CCB97; --ok-soft:#143326; --bad:#F07C7C; --bad-soft:#3A1A1E; --warn:#E0A43A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1222; --surface:#171C31; --sunk:#10152A; --line:#2A3150;
+  --ink:#E8EBF5; --muted:#99A1B9; --accent:#7D8CFF; --accent-ink:#0E1222; --accent-soft:#232B55;
+  --band:#F5B82E; --band-ink:#2A1E00;
+  --ok:#4CCB97; --ok-soft:#143326; --bad:#F07C7C; --bad-soft:#3A1A1E; --warn:#E0A43A; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.bar-in,.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar-in{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.logo{font-family:var(--f-display);font-weight:800;font-size:20px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo b{background:var(--band);color:var(--band-ink);border-radius:6px;padding:0 6px;font-size:15px}
+nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+nav a{color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:8px;font-size:14px;font-weight:700}
+nav a.on{background:var(--accent-soft);color:var(--accent)}
+.stats{display:flex;gap:8px;font-family:var(--f-mono);font-size:13px}
+.chip{background:var(--sunk);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.wrap{padding-block:24px 64px;display:flex;flex-direction:column;gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hero h1{font-size:clamp(30px,6vw,46px);font-weight:800;letter-spacing:-.01em}
+.hero h1 em{font-style:normal;background:linear-gradient(transparent 60%,var(--band) 60%);padding:0 4px}
+.hero p{color:var(--muted);max-width:60ch;margin:12px 0 0}
+.btn{border:0;border-radius:10px;padding:11px 18px;font-weight:700;background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:var(--sunk);color:var(--ink)}
+.btn.small{padding:7px 12px;font-size:14px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;text-align:left;color:var(--ink);display:flex;flex-direction:column;gap:6px;min-width:0}
+.tile:hover{border-color:var(--accent)}
+.tile h3{font-size:17px}
+.tile .meta{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.tag.R{background:#DDF3EA;color:#0C6B49}.tag.L{background:#E3E7FD;color:#2B3FD6}.tag.W{background:#FCEBD2;color:#8A5300}.tag.S{background:#F6E0F0;color:#8E2C73}.tag.G{background:#E6E9F0;color:#3D4660}
+.section-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.section-h h2{font-size:22px}
+.passage{background:var(--sunk);border-radius:10px;padding:16px;max-height:52vh;overflow:auto;font-size:15.5px}
+.passage p{margin:0 0 10px}
+.passage .pl{font-family:var(--f-mono);font-weight:600;color:var(--accent);margin-right:6px}
+.q{border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;gap:10px}
+.q:first-child{border-top:0;padding-top:0}
+.qn{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 12px}
+.opt .k{font-family:var(--f-mono);font-weight:600;min-width:1.4em}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.why{font-size:14px;color:var(--muted);margin-top:4px}
+.opt.right .why,.opt.wrong .why{color:var(--ink)}
+input[type=text],textarea,select{font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+textarea{min-height:280px;line-height:1.6;resize:vertical}
+input.right{border-color:var(--ok);background:var(--ok-soft)}input.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{border-radius:10px;padding:12px 14px;font-size:14.5px}
+.fb.ok{background:var(--ok-soft)}.fb.no{background:var(--bad-soft)}
+.fb b{font-family:var(--f-display)}
+.score{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.bandbox{background:var(--band);color:var(--band-ink);border-radius:14px;padding:12px 20px;text-align:center}
+.bandbox .n{font-family:var(--f-display);font-weight:800;font-size:44px;line-height:1}
+.bandbox .l{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.timer{font-family:var(--f-mono);font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
+.timer.low{color:var(--bad)}
+.progress{height:8px;background:var(--sunk);border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.meter{display:grid;grid-template-columns:minmax(0,1fr) 120px 48px;gap:10px;align-items:center;font-size:14px}
+.meter .progress i{background:var(--ok)}
+.meter.weak .progress i{background:var(--bad)}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.day{border:1px solid var(--line);border-radius:10px;padding:8px 6px;text-align:center;background:var(--surface);color:var(--ink);font-size:12px;min-width:0}
+.day b{display:block;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.day.done{background:var(--ok-soft);border-color:var(--ok)}
+.day.today{outline:2.5px solid var(--accent)}
+.today-card{border:2px solid var(--accent)}
+ul.tight{margin:6px 0;padding-left:20px}ul.tight li{margin:3px 0}
+.script{font-size:14px;background:var(--sunk);border-radius:10px;padding:12px;max-height:280px;overflow:auto}
+.script p{margin:0 0 6px}
+.chartbox{overflow-x:auto}
+.check{display:flex;gap:10px;align-items:flex-start;padding:6px 0}
+.check input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent)}
+details summary{cursor:pointer;font-weight:700}
+.model{white-space:pre-wrap;font-size:15px;background:var(--sunk);border-radius:10px;padding:14px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:700;z-index:20}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.cue{border:2px dashed var(--line);border-radius:12px;padding:16px}
+.cue h3{font-size:19px;margin-bottom:6px}
+@media (max-width:520px){.meter{grid-template-columns:minmax(0,1fr) 80px 44px}.week{gap:4px}.day{font-size:10px;padding:6px 2px}nav{margin-left:0;width:100%}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="bar"><div class="bar-in">
+  <a class="logo" href="#home">Bandwise <b>7.5</b></a>
+  <div class="stats"><span class="chip" id="xpChip">0 XP</span><span class="chip" id="streakChip">🔥 0</span></div>
+  <nav>
+    <a href="#home" data-v="home">Bugün</a>
+    <a href="#practice" data-v="practice">Pratik</a>
+    <a href="#plan" data-v="plan">Plan</a>
+    <a href="#progress" data-v="progress">İlerleme</a>
+  </nav>
+</div></header>
+<main class="wrap" id="app"></main>
+
+<script>
+/* ============ STORAGE ============ */
+const KEY='bandwise-v1';
+const blank={xp:0,days:{},history:[],types:{},start:null,drafts:{},planDone:{}};
+let S=load();
+function load(){try{const r=localStorage.getItem(KEY);return r?Object.assign({},blank,JSON.parse(r)):{...blank}}catch(e){return {...blank}}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const todayStr=()=>new Date().toISOString().slice(0,10);
+function streak(){let n=0;const d=new Date();for(;;){const k=d.toISOString().slice(0,10);if(S.days[k]){n++;d.setDate(d.getDate()-1)}else{if(n===0&&k===todayStr()){d.setDate(d.getDate()-1);continue}break}}return n}
+function addXP(n){S.xp+=n;S.days[todayStr()]=(S.days[todayStr()]||0)+n;save();hdr();toast('+'+n+' XP')}
+function hdr(){xpChip.textContent=S.xp+' XP';streakChip.textContent='🔥 '+streak()+' gün'}
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),1600)}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm=s=>String(s).toLowerCase().replace(/[.,]/g,'').replace(/\s+/g,' ').trim();
+
+/* ============ BAND TABLES (gayriresmî) ============ */
+const LBAND=[[39,9],[37,8.5],[35,8],[32,7.5],[30,7],[26,6.5],[23,6],[18,5.5],[16,5],[13,4.5],[10,4],[0,3.5]];
+const RBAND=[[39,9],[37,8.5],[35,8],[33,7.5],[30,7],[27,6.5],[23,6],[19,5.5],[15,5],[13,4.5],[10,4],[0,3.5]];
+function band(skill,correct,total){const raw=Math.round(correct/total*40);const t=skill==='L'?LBAND:RBAND;for(const[m,b]of t)if(raw>=m)return b;return 3.5}
+
+/* ============ CONTENT ============ */
+const TYPE_NAMES={tfng:'True / False / Not Given',heading:'Matching Headings',gap:'Boşluk doldurma',mcq:'Multiple choice',article:'Articles (a/an/the)',prep:'Prepositions',agree:'Subject–verb agreement',count:'Countable / uncountable',colloc:'Collocations',signpost:'Signposting',predict:'Tahmin (prediction)',trend:'Task 1 trend dili'};
+
+const SETS=[
+/* ---------- READING ---------- */
+{id:'r1',skill:'R',title:'The Return of the Night Train',sub:'T/F/NG + boşluk + çoktan seçmeli',min:15,
+passage:[
+['A','For most of the twentieth century, overnight sleeper trains were an ordinary way to cross Europe. By the early 2000s, however, many routes had been withdrawn. Low-cost airlines could carry passengers between capitals in under two hours, and national rail operators judged that the carriages, which are expensive to maintain and are used only once every twenty-four hours, no longer justified their cost.'],
+['B','Since around 2016 the picture has changed. Austria\'s state railway took over several routes that German operators had abandoned and, rather than reducing services, invested in new carriages. Its passenger numbers rose steadily, and other operators followed with new connections between cities such as Vienna, Brussels and Paris.'],
+['C','Surveys suggest that environmental concern is one reason for this revival. A rail journey generally produces a fraction of the carbon emissions of the equivalent flight. Yet researchers caution that green values alone rarely change behaviour. Travellers also mention practical advantages: a sleeper departs from the city centre, avoids airport security queues and saves the cost of a hotel night.'],
+['D','Problems remain. Tickets are frequently more expensive than flights, partly because operators must pay a separate track-access charge in every country they pass through. Booking can also be complicated, since there is no single European system that sells tickets for all operators. Some campaigners argue that governments should reduce track charges for night services, although this proposal has not yet been widely adopted.']],
+qs:[
+{t:'tfng',q:'Sleeper carriages are costly partly because they are used only once a day.',a:'TRUE',why:'Paragraf A: "expensive to maintain and are used only once every twenty-four hours". "Once a day" = "once every twenty-four hours" parafrazı. Bilgi açıkça var → TRUE.'},
+{t:'tfng',q:'Austria\'s railway reduced its night services after taking over German routes.',a:'FALSE',why:'Paragraf B: "rather than reducing services, invested in new carriages". Metin tam tersini söylüyor → FALSE. NG değil, çünkü konu metinde var ve çelişiyor.'},
+{t:'tfng',q:'Most passengers choose night trains mainly for environmental reasons.',a:'NOT GIVEN',why:'Paragraf C çevrenin "one reason" (nedenlerden biri) olduğunu söylüyor. "Most passengers… mainly" oranı hiç verilmiyor. Metin buna ne evet ne hayır diyor → NOT GIVEN. Tuzak: "most" gibi ölçü kelimeleri.'},
+{t:'tfng',q:'Night-train tickets are often more expensive than flights.',a:'TRUE',why:'Paragraf D: "Tickets are frequently more expensive than flights". frequently = often.'},
+{t:'gap',q:'Operators have to pay a track-access ______ in each country. (ONE WORD)',a:['charge'],why:'Paragraf D: "a separate track-access charge in every country". Kelimeyi metinden aynen al. "charges" çoğul olursa cümleye uymaz (a … charge).'},
+{t:'gap',q:'Unlike airports, a sleeper train leaves from the city ______. (ONE WORD)',a:['centre','center'],why:'Paragraf C: "departs from the city centre". Amerikan yazımı "center" da kabul edilir.'},
+{t:'mcq',q:'According to the researchers in paragraph C, environmental values…',o:['are the main reason the night train has returned.','are usually not enough by themselves to change how people travel.','have no effect on how travellers choose transport.','matter more to train operators than to passengers.'],a:1,
+ whys:['Paragraf çevreyi "one reason" diye sunuyor, ana neden demiyor.','Doğru: "green values alone rarely change behaviour" = tek başına yeterli değil.','Aşırı ifade: "no effect" denmiyor, "alone rarely" deniyor. Uç kelimelere dikkat.','Operatörlerin değerlerinden hiç bahsedilmiyor.']},
+{t:'mcq',q:'What does the writer say about lowering track charges?',o:['It has been introduced across Europe.','It was rejected by campaigners.','It is suggested but not yet common.','It would make booking simpler.'],a:2,
+ whys:['"has not yet been widely adopted" — yaygın değil.','Öneriyi kampanyacılar yapıyor, reddetmiyor.','Doğru: "proposal has not yet been widely adopted".','Rezervasyon sorunu ayrı bir problem, ücretle bağlanmıyor.']}
+]},
+{id:'r2',skill:'R',title:'Urban Heat Islands',sub:'Matching Headings — ana fikri bulma',min:12,
+passage:[
+['A','On a still summer evening, the centre of a large city can be several degrees warmer than the surrounding countryside. This phenomenon, known as the urban heat island, was first recorded in London in the early nineteenth century, when an amateur scientist compared thermometer readings taken in the city with those from nearby villages.'],
+['B','The causes are well understood. Asphalt and concrete absorb sunlight during the day and release it slowly at night. Tall buildings trap warm air and block the wind that would otherwise cool the streets. Air conditioners, vehicles and factories add further heat. Meanwhile, the lack of trees and soil means there is little evaporation, which in rural areas helps to lower temperatures.'],
+['C','The consequences go beyond discomfort. During heatwaves, death rates in cities rise sharply, particularly among elderly residents living alone. Higher temperatures also increase the demand for electricity, which can overload power networks at the very moment they are most needed, and they speed up the chemical reactions that produce ground-level smog.'],
+['D','Cities have begun to respond. Some have painted roofs white so that they reflect rather than absorb sunlight. Others are planting trees along streets, creating "green roofs" covered in vegetation, or replacing car parks with small parks. In Medellín, Colombia, a network of green corridors reduced local temperatures by around two degrees.'],
+['E','However, measuring the success of such projects is not simple. Temperature varies greatly from one street to the next, and a single sensor may give a misleading picture. Researchers increasingly rely on satellite images combined with dense networks of low-cost sensors to judge which measures really work.']],
+headings:['i. A difficulty in evaluating solutions','ii. How the effect was first noticed','iii. Why cities lose and gain heat','iv. The cost of air conditioning','v. Practical ways to cool cities','vi. Risks to health and infrastructure','vii. Rural areas are getting hotter'],
+qs:[
+{t:'heading',q:'Paragraph A',a:'ii',why:'İlk ve son cümle: tanım + "first recorded in London". Paragrafın işi olayın ilk nasıl fark edildiğini anlatmak → ii.'},
+{t:'heading',q:'Paragraph B',a:'iii',why:'"The causes are well understood" — paragraf nedenleri sıralıyor (asfalt, binalar, klima). iv tuzak: klima sadece bir detay, paragrafın konusu değil.'},
+{t:'heading',q:'Paragraph C',a:'vi',why:'"consequences" → ölüm oranları (sağlık) + elektrik şebekesi (altyapı). İki detayı birden kapsayan başlık vi.'},
+{t:'heading',q:'Paragraph D',a:'v',why:'"Cities have begun to respond" + beyaz çatılar, ağaçlar, yeşil koridorlar = pratik çözümler.'},
+{t:'heading',q:'Paragraph E',a:'i',why:'"However, measuring the success … is not simple" — çözümleri değerlendirmenin zorluğu. "However" ile başlayan paragraflar çoğu zaman önceki fikre bir sınır getirir.'}
+]},
+{id:'r3',skill:'R',title:'Why We Forget',sub:'Özet tamamlama + çoktan seçmeli',min:14,
+passage:[
+['A','In the 1880s the German psychologist Hermann Ebbinghaus spent years memorising lists of meaningless syllables and testing himself at different intervals. He found that most of what he learned was lost within the first day, after which forgetting slowed considerably. His results, drawn as the "forgetting curve", remain among the most frequently replicated findings in psychology.'],
+['B','Ebbinghaus also noticed that each time he reviewed a list, it took him less effort to relearn it, and the material lasted longer before fading. Modern researchers call this the spacing effect: reviewing information several times, with increasing gaps between sessions, produces far stronger memories than the same amount of study concentrated into one session.'],
+['C','A second finding concerns the method of review. Simply rereading notes creates a feeling of familiarity, which students often mistake for understanding. In contrast, trying to recall information without looking — a technique known as retrieval practice — feels harder but leads to better long-term retention. Several studies have found that students who tested themselves remembered roughly fifty per cent more a week later than those who reread.'],
+['D','Forgetting is not always a failure, however. Some scientists argue that the brain deliberately discards details that are not used, which allows it to generalise and to adapt to new situations. From this point of view, a perfect memory would be less a gift than a burden.']],
+qs:[
+{t:'gap',q:'Summary: Ebbinghaus found that most forgetting happens within the first ______. (ONE WORD)',a:['day'],why:'Paragraf A: "lost within the first day".'},
+{t:'gap',q:'Reviewing with increasing gaps is called the ______ effect. (ONE WORD)',a:['spacing'],why:'Paragraf B: "Modern researchers call this the spacing effect".'},
+{t:'gap',q:'Rereading produces a sense of ______ that students confuse with understanding. (ONE WORD)',a:['familiarity'],why:'Paragraf C: "creates a feeling of familiarity". Özet sorularında kelime türüne dikkat: "a sense of ___" → isim gerekiyor.'},
+{t:'gap',q:'Recalling information without looking is known as retrieval ______. (ONE WORD)',a:['practice'],why:'Paragraf C: "a technique known as retrieval practice".'},
+{t:'mcq',q:'In paragraph C, students who tested themselves…',o:['found the method easier than rereading.','remembered about half as much as rereaders.','remembered around fifty per cent more after a week.','understood the material immediately.'],a:2,
+ whys:['Tam tersi: "feels harder".','Ters çevrilmiş sayı tuzağı: "fifty per cent more", "half as much" değil.','Doğru: "roughly fifty per cent more a week later".','"immediately" metinde yok, sonuç bir hafta sonra ölçülüyor.']},
+{t:'mcq',q:'What is the writer\'s main point in paragraph D?',o:['A perfect memory would be very useful.','Forgetting can serve a useful purpose.','Scientists cannot explain forgetting.','Details are more important than general ideas.'],a:1,
+ whys:['Yazar tersini söylüyor: "less a gift than a burden".','Doğru: "Forgetting is not always a failure" + beyin genelleme için ayrıntı atıyor.','Bir açıklama veriliyor, bilinmiyor denmiyor.','Metin genellemenin değerini vurguluyor, ayrıntının değil.']}
+]},
+
+/* ---------- LISTENING ---------- */
+{id:'l1',skill:'L',title:'Section 1 · Joining a Sports Centre',sub:'Form doldurma · iki konuşmacı',min:10,
+predict:true,
+script:[
+['W','Good morning, Riverside Sports Centre. How can I help?'],
+['M','Hi, I\'d like to become a member, please.'],
+['W','Of course. Can I take your surname first?'],
+['M','Yes, it\'s Harrington. That\'s H, A, double R, I, N, G, T, O, N.'],
+['W','Thank you. And which membership are you interested in? We have standard, off-peak and family.'],
+['M','I was thinking of standard, but actually I only come in the mornings, so off-peak would be better.'],
+['W','Good choice. Off-peak is twenty-eight pounds a month. Standard is forty.'],
+['M','Twenty-eight is fine. Do I need to bring anything for my induction?'],
+['W','Just a photo for your card. Inductions are on Tuesday or Thursday. Tuesday is fully booked this week, I\'m afraid.'],
+['M','Thursday it is, then.'],
+['W','Lovely. And finally your postcode?'],
+['M','It\'s B, K, nine, four, R, T.']],
+qs:[
+{t:'gap',q:'Surname: ______',a:['harrington'],why:'İsimler harf harf hecelenir: "double R" = RR. Hecelemeyi duyduğun an büyük harfle yaz.',pred:'İsim → hecelenecek, harf harf yaz'},
+{t:'gap',q:'Membership type: ______',a:['off-peak','off peak','offpeak'],why:'Tuzak: önce "standard" diyor, sonra "actually … off-peak would be better". "Actually" düzeltme sinyalidir; son söylenen doğrudur.',pred:'Üç seçenekten biri → standard / off-peak / family'},
+{t:'gap',q:'Monthly fee: £______',a:['28','twenty-eight','twenty eight'],why:'İki fiyat geçiyor (28 ve 40). Seçtiği üyelik off-peak olduğu için 28. Sayı dikkat dağıtıcıları Section 1\'in klasiğidir.',pred:'Sayı (para)'},
+{t:'gap',q:'Bring a ______ for the card.',a:['photo','photograph'],why:'"Just a photo for your card." Boşluktan önceki "a" tekil bir isim bekliyor.',pred:'Tekil isim (a ___)'},
+{t:'gap',q:'Induction day: ______',a:['thursday'],why:'Salı dolu olduğu için Perşembe. İki gün söylendiğinde hangisinin elendiğini dinle.',pred:'Gün adı'},
+{t:'gap',q:'Postcode: ______',a:['bk94rt','bk9 4rt'],why:'Harf ve rakam karışık; IELTS\'te boşluklu ya da boşluksuz yazmak genelde kabul edilir.',pred:'Harf + rakam karışımı'}
+]},
+{id:'l2',skill:'L',title:'Section 4 · The Story of the Barcode',sub:'Akademik ders · signposting takibi',min:12,
+script:[
+['L','Today I want to look at a piece of technology so ordinary that we rarely notice it: the barcode.'],
+['L','Let\'s start with its origins. In 1948 a graduate student named Bernard Silver overheard a supermarket manager asking for a way to record product information automatically. Silver and his friend Joseph Woodland took up the challenge.'],
+['L','Woodland\'s first idea was inspired by Morse code. He drew dots and dashes in the sand of a beach and then extended them downwards, creating thin and thick lines. Interestingly, the first design was not a set of lines at all, but a circle, like a target, so that it could be read from any direction.'],
+['L','However, the technology to read it simply did not exist yet. It was only with the development of the laser in the nineteen-sixties that scanning became practical.'],
+['L','Moving on to adoption. The first product ever scanned in a shop, in 1974 in Ohio, was a packet of chewing gum. Shops were slow to adopt the system, mainly because of the cost of the scanners.'],
+['L','Finally, what about the future? Many experts expect barcodes to be replaced by radio tags, which can be read without a direct line of sight. But for now, the barcode\'s low cost means it remains the standard.']],
+qs:[
+{t:'mcq',q:'Silver became interested in the idea after…',o:['reading about Morse code.','hearing a shop manager\'s request.','working in a supermarket.'],a:1,whys:['Morse fikri Woodland\'a ait ve daha sonra geliyor.','Doğru: "overheard a supermarket manager asking". overheard = hearing.','Süpermarkette çalıştığı söylenmiyor; sadece müdürü duyuyor.']},
+{t:'gap',q:'The first barcode design was shaped like a ______. (ONE WORD)',a:['circle','target'],why:'"Interestingly" bir sürpriz bilgi sinyali: "not a set of lines … but a circle, like a target".'},
+{t:'gap',q:'Scanning became practical after the invention of the ______. (ONE WORD)',a:['laser'],why:'"However" bir sorun geldiğini haber veriyor, ardından çözüm: laser.'},
+{t:'gap',q:'The first item scanned in a shop was ______. (TWO WORDS)',a:['chewing gum','a packet of chewing gum'],why:'"Moving on to adoption" yeni bölüm sinyali. "a packet of" iki kelime sınırını aşar; cevap "chewing gum".'},
+{t:'mcq',q:'Shops were slow to use barcodes mainly because of…',o:['the price of equipment.','a lack of trained staff.','customer complaints.'],a:0,whys:['Doğru: "mainly because of the cost of the scanners" — cost = price, scanners = equipment.','Personelden bahsedilmiyor.','Müşteriden bahsedilmiyor.']},
+{t:'mcq',q:'Why are barcodes still standard today?',o:['Radio tags are unreliable.','They are cheap.','They can be read from any direction.'],a:1,whys:['Radyo etiketleri hakkında olumsuz bir şey söylenmiyor.','Doğru: "the barcode\'s low cost means it remains the standard".','"Any direction" ilk dairesel tasarımın amacıydı, bugünkü nedenin değil.']}
+]},
+
+/* ---------- GRAMMAR / VOCAB ---------- */
+{id:'g1',skill:'G',title:'Fosilleşmiş Hatalar',sub:'Articles · prepositions · agreement',min:6,
+qs:[
+{t:'article',q:'She works as ___ engineer at a bank.',o:['a','an','the','—'],a:1,whys:['"engineer" ünlü sesle başlıyor.','Doğru: meslek + ünlü ses → an.','İlk kez bahsedilen, belirli değil.','Tekil sayılabilir isim artikelsiz kalamaz.']},
+{t:'article',q:'___ unemployment rose sharply in 2009.',o:['The','An','—'],a:2,whys:['Genel, soyut kavram; belirli bir işsizlik değil.','Sayılamaz isim, "an" almaz.','Doğru: genel anlamda sayılamaz isim → artikelsiz.']},
+{t:'article',q:'The graph shows ___ number of tourists who visited Spain.',o:['a','the','—'],a:1,whys:['"a number of" = birçok (anlam değişir).','Doğru: "the number of" = sayısı. Task 1\'de en sık kalıp.','"number" tekil sayılabilir, artikelsiz olmaz.']},
+{t:'prep',q:'The result depends ___ several factors.',o:['of','on','from'],a:1,whys:['Türkçe "-e bağlı"dan gelen tipik hata.','Doğru: depend on.','Yanlış kalıp.']},
+{t:'prep',q:'Many students are interested ___ studying abroad.',o:['about','in','for'],a:1,whys:['Yaygın ama yanlış.','Doğru: interested in + -ing.','Yanlış kalıp.']},
+{t:'prep',q:'Sales increased ___ 15% between 2010 and 2015.',o:['by','with','to'],a:0,whys:['Doğru: artış miktarı → by.','"with" artış için kullanılmaz.','"to 15%" = son değer 15% demek; cümle artışın miktarını anlatıyor.']},
+{t:'agree',q:'One of the main reasons ___ the cost of housing.',o:['are','is','were'],a:1,whys:['Özne "one", "reasons" değil.','Doğru: One … is.','Hem çoğul hem zaman yanlış.']},
+{t:'agree',q:'The number of cars ___ doubled since 2000.',o:['have','has','are'],a:1,whys:['"The number" tekil özne.','Doğru: the number … has.','Anlam ve yapı yanlış.']},
+{t:'count',q:'The teacher gave me some useful ___.',o:['advices','advice','an advice'],a:1,whys:['advice sayılamaz, -s almaz.','Doğru.','Sayılamaz isim "an" almaz; "a piece of advice" denir.']},
+{t:'count',q:'There ___ a lot of research on this topic.',o:['are','is','have'],a:1,whys:['research sayılamaz → tekil fiil.','Doğru.','Yapı yanlış.']}
+]},
+{id:'v1',skill:'G',title:'Akademik Collocations',sub:'Writing & Speaking için doğal ikili',min:5,
+qs:[
+{t:'colloc',q:'The policy had a significant ___ on young people.',o:['impact','affect','influence to'],a:0,whys:['Doğru: have an impact on.','"affect" fiil; isim olarak "effect".','"influence on" olur, "to" değil.']},
+{t:'colloc',q:'Governments should ___ measures to reduce pollution.',o:['do','take','make'],a:1,whys:['"do measures" doğal değil.','Doğru: take measures.','"make measures" yanlış eşleşme.']},
+{t:'colloc',q:'Students need to ___ progress every week.',o:['do','make','get'],a:1,whys:['Yanlış eşleşme.','Doğru: make progress.','Doğal değil.']},
+{t:'colloc',q:'This trend ___ a serious threat to wildlife.',o:['poses','makes','gives'],a:0,whys:['Doğru: pose a threat.','Doğal değil.','Doğal değil.']},
+{t:'colloc',q:'There is a ___ correlation between income and health.',o:['strong','big','heavy'],a:0,whys:['Doğru: strong/weak correlation.','Konuşma dilinde bile doğal değil.','"heavy" yağmur/trafik için.']},
+{t:'signpost',q:'Lecturer: "___, let\'s turn to the economic effects." Bu ifade neyi gösterir?',o:['Bir örnek gelecek','Yeni bir bölüme geçiliyor','Bir sonuç özetleniyor'],a:1,whys:['Örnek için "for instance".','Doğru: "Moving on / Let\'s turn to" = konu değişimi. Section 4\'te bir sonraki soruya geç.','Özet için "To sum up".']}
+]},
+
+/* ---------- WRITING ---------- */
+{id:'w2a',skill:'W',kind:'write',task:2,title:'Task 2 · Free university education',sub:'Opinion · 40 dk · 250+ kelime',min:40,
+prompt:'Some people think that the government should provide free university education for all students. To what extent do you agree or disagree?',
+plan:['Görüşünü seç: mostly agree / disagree (ikisinin ortası netlik kaybettirir).','Body 1: en güçlü nedenin + açıklama + örnek.','Body 2: ikinci neden ya da karşı görüşü kabul edip cevapla.','Sonuç: yeni fikir yok, görüşünü tekrar et.'],
+model:`Whether higher education should be funded entirely by the state is a question that divides many societies. While I accept that free tuition places a heavy burden on public budgets, I largely agree that university should be available to every capable student without charge.
+
+The main reason is that tuition fees prevent talented students from poorer families from studying. When young people must take on large loans, many choose to enter work immediately instead, even when they have the ability to succeed academically. A country that loses these students also loses future doctors, engineers and teachers. Germany, which abolished tuition fees in 2014, shows that a strong economy can sustain this policy.
+
+Admittedly, critics point out that taxpayers who never attend university would be paying for those who do. This concern is reasonable, but graduates generally earn higher salaries and therefore return more in income tax over their careers. In this sense, free education is less a gift than an investment that the state recovers over time.
+
+In conclusion, although funding free university education is expensive, I believe the long-term benefits for social mobility and the economy outweigh the cost.`},
+{id:'w2b',skill:'W',kind:'write',task:2,title:'Task 2 · Working from home',sub:'Advantages / disadvantages · 40 dk',min:40,
+prompt:'More and more people are working from home rather than in an office. Do the advantages of this trend outweigh the disadvantages?',
+plan:['Sorunun cevabını girişte ver: "the advantages outweigh…" ya da tersi.','Body 1: avantajlar (zaman, maliyet) + örnek.','Body 2: dezavantajlar (izolasyon, sınır) + neden daha az ağır.','Sonuç: hükmünü tekrarla.']},
+{id:'w1a',skill:'W',kind:'write',task:1,title:'Task 1 · Internet access (line graph)',sub:'3 ülke · 2000–2020 · 20 dk · 150+',min:20,
+prompt:'The line graph below shows the percentage of households with internet access in three countries between 2000 and 2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.',
+chart:{years:[2000,2005,2010,2015,2020],series:[['Norway',[52,74,90,96,98]],['Brazil',[5,13,27,51,71]],['India',[1,3,8,22,43]]]},
+plan:['Giriş: grafiği parafraz et (1 cümle).','Overview: tüm ülkeler arttı; Norveç hep en yüksek; Brezilya ve Hindistan farkı kapattı.','Body 1: Norveç (52% → 98%, yükseliş yavaşladı).','Body 2: Brezilya ve Hindistan (en hızlı artış 2010 sonrası).'],
+model:`The line graph compares the proportion of households with internet access in Norway, Brazil and India over a twenty-year period from 2000.
+
+Overall, access rose in all three countries. Norway had by far the highest rate throughout, while Brazil and India, despite starting from very low levels, experienced the most rapid growth, particularly after 2010.
+
+In 2000, just over half of Norwegian households (52%) were online, compared with only 5% in Brazil and 1% in India. Norway's figure climbed steadily to 90% by 2010, after which growth slowed as it approached saturation, reaching 98% in 2020.
+
+Brazil's figure rose gradually to 27% in 2010 and then almost doubled to 51% within five years, ending the period at 71%. India followed a similar but slower pattern: access remained below 10% until 2010, before increasing sharply to 43% in 2020. Nevertheless, this was still less than half the Norwegian rate.`},
+
+/* ---------- SPEAKING ---------- */
+{id:'s1',skill:'S',kind:'speak',title:'Part 1 · Work, home, free time',sub:'Kısa cevap + 1 neden + 1 detay',min:5,part:1,
+items:['Do you work or are you a student?','What do you enjoy most about your job or studies?','Do you prefer mornings or evenings? Why?','How often do you use public transport?','Is there a skill you would like to learn?','Do you think your hometown has changed much recently?'],
+tips:['2–3 cümle yeter: cevap + neden + küçük örnek.','"Yes" veya "No" ile bırakma; "Yes, mainly because…" de.','Soruyu aynen tekrar etme, eş anlamlıyla başla.']},
+{id:'s2',skill:'S',kind:'speak',title:'Part 2 · A useful piece of technology',sub:'1 dk hazırlık · 2 dk konuşma',min:4,part:2,
+card:{t:'Describe a piece of technology you find useful.',b:['what it is','when you started using it','how you use it','and explain why you find it useful']},
+tips:['Notlara tam cümle değil anahtar kelime yaz.','0:00–0:30 ne ve ne zaman · 0:30–1:30 nasıl kullanıyorsun · 1:30–2:00 neden önemli.','Süre bitmeden durma; "Another thing I should mention is…" ile uzat.']},
+{id:'s2b',skill:'S',kind:'speak',title:'Part 2 · A place that impressed you',sub:'1 dk hazırlık · 2 dk konuşma',min:4,part:2,
+card:{t:'Describe a place you visited that left a strong impression on you.',b:['where it was','when you went there','what you did there','and explain why it made a strong impression']},
+tips:['Geçmiş zaman tutarlılığına dikkat (went, saw, felt).','Duyusal detay ekle: what it looked, sounded, smelled like.','Son 30 saniyeyi duygularına ayır.']},
+{id:'s3',skill:'S',kind:'speak',title:'Part 3 · Money and job satisfaction',sub:'I.D.E.A. formülü · 1 dk/cevap',min:6,part:3,
+items:['Is money the most important factor in job satisfaction?','Why do some people leave well-paid jobs?','Should governments limit working hours?','How might work change in the next twenty years?'],
+tips:['I – fikrini söyle: "I\'d argue that…"','D – geliştir: "What I mean is…"','E – örnek ver: "For instance…"','A – karşı görüş: "That said, …"']}
+];
+
+/* ============ 12-WEEK PLAN (hocanın planı) ============ */
+const PLAN={
+1:{name:'1. Ay · Strateji ve temel yapı',note:'Hız değil doğruluk. Süre tutma.',days:[
+ ['Pzt','Listening · soru tipleri & tahmin','l1'],['Sal','Reading · bağlamdan kelime','r3'],['Çar','Writing · giriş ve konu cümlesi','w2a'],
+ ['Per','Speaking · Part 1 & 2 kaydı','s2'],['Cum','Gramer · fosil hatalar','g1'],['Cmt','Writing · POWER ile tam essay','w2a'],['Paz','R & L analizi · süresiz test','r1']]},
+2:{name:'2. Ay · Beceri ve bağlam',note:'Stratejiyi uygula, kelimeyi aktifleştir.',days:[
+ ['Pzt','Listening · Section 3 & 4, signposting','l2'],['Sal','Reading · Headings & T/F/NG','r2'],['Çar','Writing Task 1 · trend dili','w1a'],
+ ['Per','Speaking Part 3 · Açıkla + Örnek','s3'],['Cum','Kelime aktivasyonu','v1'],['Cmt','Writing · T1 (20dk) + T2 (40dk)','w2b'],['Paz','Speaking kaydı & transkript analizi','s2b']]},
+3:{name:'3. Ay · Hız ve hata ayıklama',note:'Gerçek süre. Zayıf alana odaklan.',days:[
+ ['Pzt','Zayıf alan · hata analizi','weak'],['Sal','Zayıf alan · hata analizi','weak'],['Çar','Zayıf alan · hata analizi','weak'],
+ ['Per','Zayıf alan · hata analizi','weak'],['Cum','Hızlı strateji tekrarı','g1'],['Cmt','Mock: L + R + W gerçek süre','mock'],['Paz','Mock analizi · 8.0 × 3 = hazırsın','progress']]}
+};
+function planPos(){if(!S.start)return null;const d0=new Date(S.start+'T00:00:00'),now=new Date(todayStr()+'T00:00:00');const diff=Math.floor((now-d0)/864e5);if(diff<0)return{week:1,dow:0,idx:0};const idx=Math.min(diff,83);return{week:Math.floor(idx/7)+1,dow:idx%7,idx}}
+function monthOf(w){return w<=4?1:w<=8?2:3}
+
+/* ============ WEAK AREA ============ */
+function recordType(t,ok){const r=S.types[t]||{c:0,n:0};r.n++;if(ok)r.c++;S.types[t]=r}
+function weakest(){let best=null;for(const[t,r]of Object.entries(S.types)){if(r.n<3)continue;const p=r.c/r.n;if(!best||p<best.p)best={t,p,...r}}return best}
+function setForType(t){return SETS.find(s=>s.qs&&s.qs.some(q=>q.t===t))}
+
+/* ============ ROUTER ============ */
+let running=null,timerId=null;
+function go(){clearInterval(timerId);stopTTS();const v=(location.hash||'#home').slice(1);document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===v));
+ const f={home:vHome,practice:vPractice,plan:vPlan,progress:vProgress}[v]||vHome;f();window.scrollTo(0,0);hdr()}
+addEventListener('hashchange',go);
+
+/* ============ VIEWS ============ */
+const SK={R:'Reading',L:'Listening',W:'Writing',S:'Speaking',G:'Gramer & Kelime'};
+function tile(s){return `<button class="tile" onclick="openSet('${s.id}')"><span><span class="tag ${s.skill}">${SK[s.skill]}</span></span><h3>${esc(s.title)}</h3><span class="small muted">${esc(s.sub)}</span><span class="meta">~${s.min} dk${doneCount(s.id)?' · ✓ '+doneCount(s.id)+' kez':''}</span></button>`}
+function doneCount(id){return S.history.filter(h=>h.id===id).length}
+
+function vHome(){
+ const p=planPos();let today='';
+ if(!p){today=`<section class="card today-card"><div class="eyebrow">12 haftalık plan</div><h2 style="margin:6px 0 8px">Planına bir başlangıç tarihi ver</h2><p class="muted small">Hocanın 3 aylık programı her gün sana o günün görevini açar.</p><div class="row"><input type="text" id="startIn" value="${todayStr()}" style="max-width:180px" aria-label="Başlangıç tarihi (YYYY-AA-GG)"><button class="btn" onclick="setStart()">Bugün başla</button></div></section>`}
+ else{const m=monthOf(p.week),d=PLAN[m].days[p.dow];const key='w'+p.week+'d'+p.dow;const done=S.planDone[key];
+  today=`<section class="card today-card"><div class="section-h"><div class="eyebrow">Hafta ${p.week} · ${d[0]} · ${PLAN[m].name}</div><span class="tag">${done?'✓ tamamlandı':'bugün'}</span></div><h2 style="margin:8px 0 6px;font-size:26px">${esc(d[1])}</h2><p class="muted small" style="margin:0 0 14px">${esc(PLAN[m].note)}</p><button class="btn" onclick="runPlan('${d[2]}','${key}')">Bugünün görevini başlat</button></section>`}
+ const w=weakest();
+ app.innerHTML=`<section class="hero"><div class="eyebrow">IELTS Academic · hedef band 7.5</div><h1>Zayıf olduğun yeri çalış. <em>Her gün.</em></h1><p>Bir görev seç, kısa bir set çöz ve her şıkkın neden doğru ya da yanlış olduğunu Türkçe oku. İlerlemen sadece bu tarayıcıda saklanır.</p></section>
+ ${today}
+ ${w?`<section class="card"><div class="eyebrow">Puanını aşağı çeken alan</div><div class="section-h" style="margin-top:6px"><h2>${TYPE_NAMES[w.t]||w.t}</h2><span class="num" style="color:var(--bad)">%${Math.round(w.p*100)}</span></div><p class="small muted">${w.n} soruda ${w.c} doğru. Bu tipe odaklanan seti çöz.</p><button class="btn ghost small" onclick="openSet('${(setForType(w.t)||SETS[0]).id}')">Bu tipi çalış</button></section>`:''}
+ <section><div class="section-h"><h2>30 saniyelik ısınma</h2></div></section>
+ <section class="card" id="warm"></section>
+ <section class="section-h"><h2>Hızlı başla</h2><a href="#practice" class="small" style="color:var(--accent);font-weight:700">Tüm setler →</a></section>
+ <div class="grid">${['r1','l1','w1a','s3'].map(id=>tile(SETS.find(s=>s.id===id))).join('')}</div>`;
+ warm();
+}
+function setStart(){const v=startIn.value.trim();if(!/^\d{4}-\d{2}-\d{2}$/.test(v)){toast('Tarihi YYYY-AA-GG biçiminde yaz');return}S.start=v;save();go()}
+function runPlan(target,key){S._pendingPlan=key;if(target==='weak'){const w=weakest();openSet((w&&setForType(w.t)||SETS[0]).id)}else if(target==='mock'){openMock()}else if(target==='progress'){S.planDone[key]=1;save();location.hash='#progress'}else openSet(target)}
+
+function warm(){const q={q:'"During exam weeks, the library stays open until midnight instead of closing at eight." — What changes during exam weeks?',o:['The library is only open during exam weeks.','Students can study there later in the evening.','The library closes at eight every night.'],a:1,whys:['Kütüphane her zaman açık; değişen kapanış saati.','Doğru: midnight > eight → daha geç saate kadar çalışılabilir. Parafrazı yakaladın.','Sınav haftaları dışındaki durum bu; soru değişeni soruyor.']};
+ const el=document.getElementById('warm');el.innerHTML=`<div class="eyebrow">Reading · +10 XP</div><p style="margin:8px 0 12px">${esc(q.q)}</p><div class="opts">${q.o.map((o,i)=>`<button class="opt" data-i="${i}"><span class="k">${'ABC'[i]}</span><span>${esc(o)}<div class="why" hidden></div></span></button>`).join('')}</div>`;
+ el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(el.dataset.done)return;el.dataset.done=1;const i=+b.dataset.i;el.querySelectorAll('.opt').forEach((x,j)=>{x.classList.add(j===q.a?'right':(j===i?'wrong':''));const w=x.querySelector('.why');w.hidden=false;w.textContent=q.whys[j]});recordType('mcq',i===q.a);if(i===q.a)addXP(10);else save()})}
+
+function vPractice(){
+ const groups=['R','L','W','S','G'];
+ app.innerHTML=`<section class="hero"><div class="eyebrow">Tek görev setleri</div><h1>Neyi çalışmak istiyorsun?</h1><p>Her set tek bir beceriye odaklanır. Reading ve Listening otomatik puanlanır; Writing ve Speaking için süre, kontrol listesi ve model cevap var.</p></section>
+ <section class="card"><div class="section-h"><div><div class="eyebrow">Sınav kondisyonu</div><h2 style="margin-top:4px">Mini mock</h2></div><button class="btn" onclick="openMock()">Başlat</button></div><p class="small muted" style="margin:8px 0 0">Listening → Reading → Writing Task 1 art arda, gerçek süre baskısıyla.</p></section>
+ ${groups.map(g=>`<section class="section-h"><h2>${SK[g]}</h2></section><div class="grid">${SETS.filter(s=>s.skill===g).map(tile).join('')}</div>`).join('')}`}
+
+function vPlan(){const p=planPos();
+ let h=`<section class="hero"><div class="eyebrow">Hocanın programı</div><h1>12 hafta, 84 gün</h1><p>${p?'Bugün '+(p.idx+1)+'. gün. Bir güne dokunarak o günün setini açabilirsin.':'Ana sayfadan başlangıç tarihini seç; bugün otomatik işaretlenir.'}</p></section>`;
+ for(let m=1;m<=3;m++){h+=`<section class="card"><div class="eyebrow">${PLAN[m].name}</div><p class="small muted" style="margin:4px 0 12px">${PLAN[m].note}</p>`;
+  for(let w=(m-1)*4+1;w<=m*4;w++){h+=`<div class="row" style="margin-bottom:6px"><span class="num small" style="width:36px;text-align:left">H${w}</span></div><div class="week" style="margin-bottom:12px">${PLAN[m].days.map((d,i)=>{const k='w'+w+'d'+i;return `<button class="day ${S.planDone[k]?'done':''} ${p&&p.week===w&&p.dow===i?'today':''}" title="${esc(d[1])}" onclick="runPlan('${d[2]}','${k}')"><b>${d[0]}</b>${esc(d[1].split('·')[0])}</button>`}).join('')}</div>`}
+  h+=`<details><summary class="small">Günlerin içeriği</summary><ul class="tight small">${PLAN[m].days.map(d=>`<li><b>${d[0]}:</b> ${esc(d[1])}</li>`).join('')}</ul></details></section>`}
+ h+=`<section class="card"><div class="eyebrow">Hocanın notu</div><ul class="tight"><li><b>Basitlik puan getirir.</b> Süslü kelime değil, hatasız ve net fikir.</li><li><b>Hata analizi.</b> İlerleme testten değil, testten sonraki "neden?" sorusundan gelir.</li><li><b>Ezberden kaçın.</b> Kalıbı değil yapıyı öğren, kendi cümlenle doldur.</li></ul></section>`;
+ app.innerHTML=h}
+
+function vProgress(){
+ const hist=S.history.slice(-12).reverse();const types=Object.entries(S.types).sort((a,b)=>a[1].c/a[1].n-b[1].c/b[1].n);
+ const rl=S.history.filter(h=>h.band);const last3=rl.slice(-3);
+ app.innerHTML=`<section class="hero"><div class="eyebrow">İlerleme</div><h1>Neredesin?</h1></section>
+ <div class="grid"><div class="tile"><span class="eyebrow">Toplam XP</span><span class="num" style="font-size:30px;text-align:left">${S.xp}</span></div><div class="tile"><span class="eyebrow">Seri</span><span class="num" style="font-size:30px;text-align:left">${streak()} gün</span></div><div class="tile"><span class="eyebrow">Çözülen set</span><span class="num" style="font-size:30px;text-align:left">${S.history.length}</span></div></div>
+ <section class="card"><div class="eyebrow">Hazır mısın?</div><p style="margin:6px 0 0">Hocanın kuralı: hedefinin yarım band üstünü (8.0) üst üste 3 kez al. Son ${last3.length} R/L seti: <b class="num">${last3.map(h=>h.band).join(' · ')||'—'}</b> ${last3.length===3&&last3.every(h=>h.band>=8)?'→ <b style="color:var(--ok)">hazırsın.</b>':''}</p></section>
+ <section class="card"><div class="section-h"><h2>Soru tipine göre doğruluk</h2></div><p class="small muted">Kırmızı çubuklar %70'in altı. En üstteki, puanını en çok aşağı çeken tip.</p><div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">${types.length?types.map(([t,r])=>{const p=Math.round(r.c/r.n*100);return `<div class="meter ${p<70?'weak':''}"><span>${TYPE_NAMES[t]||t}</span><div class="progress"><i style="width:${p}%"></i></div><span class="num">%${p}</span></div>`}).join(''):'<p class="muted">Henüz veri yok. Bir set çöz.</p>'}</div></section>
+ <section class="card"><h2 style="font-size:20px;margin-bottom:10px">Son çalışmalar</h2>${hist.length?hist.map(h=>`<div class="row" style="justify-content:space-between;border-top:1px solid var(--line);padding:8px 0"><span><span class="tag ${h.skill}">${h.skill}</span> ${esc(h.title)}</span><span class="num small">${h.score||''}${h.band?' · band '+h.band:''} · ${h.date}</span></div>`).join(''):'<p class="muted">Boş.</p>'}</section>
+ <section class="card"><details><summary>Verileri sıfırla</summary><p class="small muted">Tüm XP, geçmiş ve taslaklar silinir.</p><button class="btn ghost small" onclick="if(this.dataset.c){S={...blank,days:{},history:[],types:{},drafts:{},planDone:{}};save();go()}else{this.dataset.c=1;this.textContent='Emin misin? Tekrar bas'}">Sıfırla</button></details></section>`}
+
+/* ============ SET RUNNER ============ */
+function openSet(id){const s=SETS.find(x=>x.id===id);running={s,ans:{},checked:false,mock:null};
+ if(s.kind==='write')return vWrite(s);if(s.kind==='speak')return vSpeak(s);vQuiz(s)}
+function backBtn(){return `<div class="row"><a href="#practice" class="btn ghost small" style="text-decoration:none" onclick="running=null">← Setler</a></div>`}
+
+function vQuiz(s){
+ const isL=s.skill==='L';
+ let ctx='';
+ if(s.passage)ctx=`<div class="passage" tabindex="0">${s.passage.map(p=>`<p><span class="pl">${p[0]}</span>${esc(p[1])}</p>`).join('')}</div>`;
+ if(isL)ctx=`<div class="row"><button class="btn" id="playBtn" onclick="playScript()">▶ Kaydı dinle</button><button class="btn ghost small" onclick="stopTTS()">■ Durdur</button><label class="small muted row" style="gap:6px">Hız <select id="rate" style="width:auto"><option value="0.85">0.85×</option><option value="1" selected>1×</option><option value="1.1">1.1×</option></select></label></div><p class="small muted" id="ttsNote">Kayıt tarayıcının sesiyle bir kez okunur, gerçek sınav gibi. Önce soruları oku${s.predict?' ve her boşluk için tahminini yap':''}.</p>`;
+ const headingsBox=s.headings?`<div class="card" style="background:var(--sunk);border:0;padding:14px"><div class="eyebrow">Başlıklar</div><ul class="tight small" style="list-style:none;padding:0">${s.headings.map(h=>`<li>${esc(h)}</li>`).join('')}</ul></div>`:'';
+ app.innerHTML=`${backBtn()}<section class="card" style="display:flex;flex-direction:column;gap:14px"><div class="section-h"><div><span class="tag ${s.skill}">${SK[s.skill]}</span><h2 style="margin-top:6px">${esc(s.title)}</h2></div><span class="timer" id="tm"></span></div>${ctx}${headingsBox}</section>
+ <section class="card" id="qbox">${s.qs.map((q,i)=>qHTML(q,i,s)).join('')}</section>
+ <div class="row"><button class="btn" id="checkBtn" onclick="checkQuiz()">Kontrol et</button><span class="small muted" id="cnt"></span></div><div id="result"></div>`;
+ bindQuiz(s);startTimer(s.min*60,'tm',()=>{});
+}
+function qHTML(q,i,s){
+ let body='';
+ if(q.t==='tfng')body=`<div class="opts">${['TRUE','FALSE','NOT GIVEN'].map(o=>`<button class="opt" data-q="${i}" data-v="${o}"><span class="k">${o[0]}</span><span>${o}</span></button>`).join('')}</div>`;
+ else if(q.t==='heading')body=`<select id="q${i}" data-q="${i}"><option value="">Başlık seç…</option>${s.headings.map(h=>`<option value="${h.split('.')[0]}">${esc(h)}</option>`).join('')}</select>`;
+ else if(q.o)body=`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-v="${j}"><span class="k">${'ABCD'[j]}</span><span>${esc(o)}<div class="why" hidden></div></span></button>`).join('')}</div>`;
+ else body=`${q.pred?`<input type="text" id="p${i}" placeholder="Tahminin: ne tür bir cevap gelecek?" style="font-size:14px">`:''}<input type="text" id="q${i}" data-q="${i}" autocomplete="off" placeholder="Cevabın">`;
+ return `<div class="q" id="qq${i}"><span class="qn">Soru ${i+1} · ${TYPE_NAMES[q.t]||q.t}</span><div>${esc(q.q)}</div>${body}<div class="fb" id="fb${i}" hidden></div></div>`}
+function bindQuiz(s){
+ app.querySelectorAll('.opt[data-q]').forEach(b=>b.onclick=()=>{if(running.checked)return;const i=b.dataset.q;running.ans[i]=b.dataset.v;app.querySelectorAll(`.opt[data-q="${i}"]`).forEach(x=>x.classList.toggle('sel',x===b));cnt()});
+ app.querySelectorAll('input[data-q],select[data-q]').forEach(e=>e.oninput=()=>{running.ans[e.dataset.q]=e.value;cnt()});cnt()}
+function cnt(){const n=Object.values(running.ans).filter(v=>v!=='').length;const c=document.getElementById('cnt');if(c)c.textContent=n+'/'+running.s.qs.length+' cevaplandı'}
+function isRight(q,v){if(v===undefined||v==='')return false;if(q.t==='tfng'||q.t==='heading')return v===q.a;if(q.o)return +v===q.a;return q.a.some(a=>norm(a)===norm(v))}
+function checkQuiz(){
+ const s=running.s;if(running.checked)return;running.checked=true;clearInterval(timerId);stopTTS();let c=0;
+ s.qs.forEach((q,i)=>{const v=running.ans[i];const ok=isRight(q,v);if(ok)c++;recordType(q.t,ok);
+  const fb=document.getElementById('fb'+i);
+  if(q.o){app.querySelectorAll(`.opt[data-q="${i}"]`).forEach(x=>{const j=+x.dataset.v;if(j===q.a)x.classList.add('right');else if(String(j)===v)x.classList.add('wrong');const w=x.querySelector('.why');if(w){w.hidden=false;w.textContent=q.whys[j]}});fb.hidden=true}
+  else{if(q.t==='tfng')app.querySelectorAll(`.opt[data-q="${i}"]`).forEach(x=>{if(x.dataset.v===q.a)x.classList.add('right');else if(x.dataset.v===v)x.classList.add('wrong')});
+   const inp=document.getElementById('q'+i);if(inp&&q.t!=='tfng')inp.classList.add(ok?'right':'wrong');
+   fb.hidden=false;fb.className='fb '+(ok?'ok':'no');fb.innerHTML=`<b>${ok?'Doğru.':'Doğru cevap: '+esc(Array.isArray(q.a)?q.a[0]:q.a)}</b> ${esc(q.why)}`}});
+ const tot=s.qs.length,b=(s.skill==='R'||s.skill==='L')?band(s.skill,c,tot):null;const xp=c*5+(c===tot?10:0);
+ S.history.push({id:s.id,skill:s.skill,title:s.title,score:c+'/'+tot,band:b,date:todayStr()});
+ if(S._pendingPlan){S.planDone[S._pendingPlan]=1;delete S._pendingPlan}
+ addXP(xp);
+ const wrongs=s.qs.map((q,i)=>!isRight(q,running.ans[i])?q.t:null).filter(Boolean);const tally={};wrongs.forEach(t=>tally[t]=(tally[t]||0)+1);
+ result.innerHTML=`<section class="card"><div class="score">${b?`<div class="bandbox"><div class="n">${b}</div><div class="l">tahmini band</div></div>`:''}<div><h2>${c}/${tot} doğru</h2><p class="small muted" style="margin:4px 0 0">${b?'40 soruya ölçeklenmiş gayriresmî tahmin. ':''}+${xp} XP</p></div></div>
+ ${wrongs.length?`<div style="margin-top:14px"><div class="eyebrow">Debug: hataların nereden geldi?</div><ul class="tight">${Object.entries(tally).map(([t,n])=>`<li>${TYPE_NAMES[t]||t}: ${n} yanlış</li>`).join('')}</ul><p class="small">Her yanlışın altındaki açıklamayı oku ve kendine sor: <i>soruyu mu yanlış anladım, kelimeyi mi bilmiyordum, parafrazı mı kaçırdım?</i></p></div>`:'<p>Tam puan. Bir sonraki adım: aynı seti süreyi yarıya indirerek çöz.</p>'}
+ ${s.script?`<details style="margin-top:10px"><summary>Transkript</summary><div class="script" style="margin-top:8px">${s.script.map(l=>`<p><b>${l[0]}:</b> ${esc(l[1])}</p>`).join('')}</div></details>`:''}
+ <div class="row" style="margin-top:14px">${running.mock?`<button class="btn" onclick="mockNext(${c},${tot})">Sonraki bölüm →</button>`:`<button class="btn" onclick="openSet('${s.id}')">Tekrar çöz</button><a class="btn ghost" style="text-decoration:none" href="#practice">Başka set</a>`}</div></section>`;
+ result.scrollIntoView({behavior:'smooth',block:'start'})}
+
+/* ---- TTS ---- */
+function stopTTS(){try{speechSynthesis.cancel()}catch(e){}}
+function playScript(){const s=running.s;if(!('speechSynthesis' in window)){ttsNote.textContent='Bu tarayıcı sesli okumayı desteklemiyor. Transkripti açıp hızlıca bir kez oku, sonra kapat ve cevapla.';ttsNote.insertAdjacentHTML('afterend',`<details><summary>Transkripti göster</summary><div class="script">${s.script.map(l=>`<p><b>${l[0]}:</b> ${esc(l[1])}</p>`).join('')}</div></details>`);return}
+ stopTTS();const vs=speechSynthesis.getVoices().filter(v=>/^en(-|_)(GB|US|AU)/i.test(v.lang));const r=+document.getElementById('rate').value;
+ const gb=vs.filter(v=>/GB/i.test(v.lang));const v1=gb[0]||vs[0],v2=gb[1]||vs.find(v=>v!==v1)||v1;
+ playBtn.disabled=true;playBtn.textContent='Çalıyor…';
+ s.script.forEach((l,k)=>{const u=new SpeechSynthesisUtterance(l[1]);u.lang='en-GB';u.rate=r;if(l[0]==='M'){u.voice=v2;u.pitch=.8}else{u.voice=v1;u.pitch=l[0]==='W'?1.15:1}if(k===s.script.length-1)u.onend=()=>{playBtn.textContent='Kayıt bitti';};speechSynthesis.speak(u)})}
+
+/* ---- TIMER ---- */
+function startTimer(sec,id,done){clearInterval(timerId);let t=sec;const el=document.getElementById(id);const draw=()=>{if(!el)return;el.textContent=String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');el.classList.toggle('low',t<=60)};draw();timerId=setInterval(()=>{t--;draw();if(t<=0){clearInterval(timerId);done&&done()}},1000)}
+
+/* ---- WRITING ---- */
+function chartSVG(c){const W=560,H=280,L=40,R=90,T=16,B=34;const xs=i=>L+i*(W-L-R)/(c.years.length-1),ys=v=>T+(100-v)*(H-T-B)/100;
+ const cols=['var(--accent)','var(--warn)','var(--ok)'];let g='';
+ for(let v=0;v<=100;v+=25)g+=`<line x1="${L}" x2="${W-R}" y1="${ys(v)}" y2="${ys(v)}" stroke="var(--line)"/><text x="${L-8}" y="${ys(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${v}%</text>`;
+ c.years.forEach((y,i)=>g+=`<text x="${xs(i)}" y="${H-12}" text-anchor="middle" font-size="11" fill="var(--muted)">${y}</text>`);
+ c.series.forEach(([n,d],k)=>{g+=`<polyline fill="none" stroke="${cols[k]}" stroke-width="2.5" points="${d.map((v,i)=>xs(i)+','+ys(v)).join(' ')}"/>`;d.forEach((v,i)=>g+=`<circle cx="${xs(i)}" cy="${ys(v)}" r="3.5" fill="${cols[k]}"/>`);g+=`<text x="${W-R+8}" y="${ys(d[d.length-1])+4}" font-size="12" font-weight="700" fill="${cols[k]}">${n}</text>`});
+ return `<div class="chartbox"><svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:420px;font-family:var(--f-mono)" role="img" aria-label="Line graph: households with internet access">${g}</svg></div><p class="small muted" style="margin:4px 0 0">Households with internet access (%)</p>`}
+const CHECK={1:['Girişte grafiği parafraz ettim (kopyalamadım).','Ayrı bir overview paragrafım var (genel trend, rakamsız).','En önemli özellikleri seçtim, her sayıyı yazmadım.','Karşılaştırma yaptım (higher than, twice as…).','Yorum veya kişisel görüş eklemedim.','150+ kelime.'],
+ 2:['Girişte soruyu cevapladım; görüşüm net.','Her body paragrafı bir topic sentence ile başlıyor.','Her fikre açıklama + örnek verdim.','Sonuçta yeni fikir yok.','Articles ve prepositions kontrol ettim.','250+ kelime.']};
+function vWrite(s){const d=S.drafts[s.id]||'';const lim=s.task===1?150:250;
+ app.innerHTML=`${backBtn()}<section class="card" style="display:flex;flex-direction:column;gap:12px"><div class="section-h"><div><span class="tag W">Writing Task ${s.task}</span><h2 style="margin-top:6px">${esc(s.title.split('·')[1]||s.title)}</h2></div><div class="row"><span class="timer" id="tm">${s.min}:00</span><button class="btn small" id="tbtn" onclick="startTimer(${s.min*60},'tm',()=>toast('Süre doldu'));this.disabled=true">Süreyi başlat</button></div></div>
+ <p style="margin:0;font-weight:700">${esc(s.prompt)}</p>${s.chart?chartSVG(s.chart):''}
+ <details><summary class="small">POWER · plan önerisi</summary><ul class="tight small">${s.plan.map(p=>`<li>${esc(p)}</li>`).join('')}</ul></details></section>
+ <section class="card"><label for="essay" class="eyebrow">Cevabın · taslak otomatik kaydedilir</label><textarea id="essay" style="margin-top:8px" placeholder="Yazmaya başla…">${esc(d)}</textarea><div class="row" style="justify-content:space-between;margin-top:8px"><span class="num small" id="wc">0 kelime</span><span class="small muted">Hedef ${lim}+</span></div></section>
+ <section class="card"><div class="eyebrow">E · Evaluate</div><h2 style="font-size:20px;margin:6px 0 8px">Teslimden önce kontrol et</h2>${CHECK[s.task].map((c,i)=>`<label class="check"><input type="checkbox" id="ck${i}"><span>${esc(c)}</span></label>`).join('')}
+ <div class="row" style="margin-top:12px"><button class="btn" onclick="finishWrite('${s.id}')">Bitir ve kaydet</button></div><div id="wres"></div></section>`;
+ const ta=document.getElementById('essay');const up=()=>{const n=(ta.value.trim().match(/\S+/g)||[]).length;wc.textContent=n+' kelime';wc.style.color=n>=lim?'var(--ok)':'';S.drafts[s.id]=ta.value;save()};ta.oninput=up;up()}
+function finishWrite(id){const s=SETS.find(x=>x.id===id);const n=(essay.value.trim().match(/\S+/g)||[]).length;const lim=s.task===1?150:250;const ticks=CHECK[s.task].filter((_,i)=>document.getElementById('ck'+i).checked).length;clearInterval(timerId);
+ const words=essay.value.toLowerCase().match(/[a-z']+/g)||[];const fq={};const stop=new Set('the a an and of to in is are that this it for on be as with by or which have has was were can will their they people more'.split(' '));words.forEach(w=>{if(!stop.has(w)&&w.length>3)fq[w]=(fq[w]||0)+1});const rep=Object.entries(fq).filter(([w,c])=>c>=4).sort((a,b)=>b[1]-a[1]).slice(0,5);
+ S.history.push({id,skill:'W',title:s.title,score:n+' kelime · '+ticks+'/'+CHECK[s.task].length+' ✓',date:todayStr()});if(S._pendingPlan){S.planDone[S._pendingPlan]=1;delete S._pendingPlan}addXP(15+ticks*3);
+ wres.innerHTML=`<div class="fb ${n>=lim?'ok':'no'}" style="margin-top:12px"><b>${n} kelime.</b> ${n>=lim?'Uzunluk tamam.':'Kelime sınırının altındasın; gerçek sınavda Task Response puanı düşer.'}</div>
+ ${rep.length?`<div class="fb no" style="margin-top:8px"><b>Tekrar eden kelimeler:</b> ${rep.map(([w,c])=>esc(w)+' ('+c+')').join(', ')}. Eş anlamlı ya da zamir kullanmayı düşün.</div>`:''}
+ ${s.model?`<details style="margin-top:12px" open><summary>Band 7.5+ model cevap</summary><p class="small muted">Ezberleme. Yapıya bak: giriş → overview/tez → her paragrafta bir fikir → kısa sonuç.</p><div class="model">${esc(s.model)}</div></details>`:''}${running&&running.mock?`<div class="row" style="margin-top:12px"><button class="btn" onclick="mockNext(${n},0)">Mock'u bitir →</button></div>`:''}`}
+
+/* ---- SPEAKING ---- */
+function vSpeak(s){
+ const main=s.part===2?`<div class="cue"><div class="eyebrow">Cue card</div><h3>${esc(s.card.t)}</h3><p class="small" style="margin:4px 0">You should say:</p><ul class="tight">${s.card.b.map(b=>`<li>${esc(b)}</li>`).join('')}</ul></div>
+  <div class="row"><span class="timer" id="tm">01:00</span><button class="btn" id="spBtn" onclick="speakFlow()">1 dk hazırlığı başlat</button></div><p class="small muted" id="spNote">Telefonunun ses kaydedicisini aç. Hazırlık bitince 2 dakikalık konuşma süresi otomatik başlar.</p>
+  <label for="notes" class="eyebrow">Notların (anahtar kelime)</label><textarea id="notes" style="min-height:110px" placeholder="where · when · how · why…"></textarea>`
+ :`<ol style="padding-left:20px;margin:0;display:flex;flex-direction:column;gap:10px">${s.items.map((q,i)=>`<li><div class="row" style="justify-content:space-between"><span>${esc(q)}</span><button class="btn ghost small" onclick="qTimer(this,${s.part===3?60:30})">${s.part===3?'60':'30'} sn</button></div></li>`).join('')}</ol>`;
+ app.innerHTML=`${backBtn()}<section class="card" style="display:flex;flex-direction:column;gap:14px"><div><span class="tag S">Speaking Part ${s.part}</span><h2 style="margin-top:6px">${esc(s.title.split('·')[1]||s.title)}</h2></div>${main}</section>
+ <section class="card"><div class="eyebrow">Strateji</div><ul class="tight">${s.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></section>
+ <section class="card"><div class="eyebrow">Kaydını dinledikten sonra</div><h2 style="font-size:20px;margin:6px 0 8px">Micro-listening analizi</h2>
+ ${['3 saniyeden uzun durmadım.','Um / uh / like sayım 4\'ün altında.','"very", "good", "thing" kelimelerini 3\'ten az kullandım.','Kelimeleri bağlantılı söyledim (turn_off, an_apple).','Üçüncü tekil -s ve geçmiş zaman doğruydu.','En az bir karmaşık yapı kullandım (if, which, although).'].map((c,i)=>`<label class="check"><input type="checkbox" id="sk${i}"><span>${esc(c)}</span></label>`).join('')}
+ <label for="selfnote" class="eyebrow" style="display:block;margin-top:10px">Bir sonraki kayıtta düzelteceğim tek şey</label><input type="text" id="selfnote" style="margin-top:6px">
+ <div class="row" style="margin-top:12px"><button class="btn" onclick="finishSpeak('${s.id}')">Bitir ve kaydet</button></div></section>`}
+function qTimer(b,sec){let t=sec;b.disabled=true;const iv=setInterval(()=>{t--;b.textContent=t+' sn';if(t<=0){clearInterval(iv);b.textContent='✓';}},1000);b.textContent=t+' sn'}
+function speakFlow(){spBtn.disabled=true;spNote.textContent='Hazırlan: anahtar kelimeleri yaz.';startTimer(60,'tm',()=>{spNote.textContent='Konuş! 2 dakika boyunca durma.';toast('Konuşmaya başla');startTimer(120,'tm',()=>{spNote.textContent='Süre bitti. Kaydını dinle ve aşağıdaki listeyi doldur.';toast('Süre bitti')})})}
+function finishSpeak(id){const s=SETS.find(x=>x.id===id);const t=[0,1,2,3,4,5].filter(i=>document.getElementById('sk'+i).checked).length;clearInterval(timerId);S.history.push({id,skill:'S',title:s.title,score:t+'/6 ✓',date:todayStr()});if(S._pendingPlan){S.planDone[S._pendingPlan]=1;delete S._pendingPlan}addXP(10+t*3);location.hash='#progress'}
+
+/* ---- MINI MOCK ---- */
+function openMock(){running={mockSteps:['l1','r1','w1a'],step:0,scores:[]};mockStart()}
+function mockStart(){const id=running.mockSteps[running.step];const s=SETS.find(x=>x.id===id);const m={mockSteps:running.mockSteps,step:running.step,scores:running.scores};running={s,ans:{},checked:false,mock:m};
+ if(s.kind==='write'){vWrite(s);app.insertAdjacentHTML('afterbegin',`<div class="fb ok"><b>Mock · bölüm ${m.step+1}/3.</b> Süreyi başlat ve 20 dakikada bitir.</div>`);setTimeout(()=>tbtn.click(),50)}
+ else{vQuiz(s);app.insertAdjacentHTML('afterbegin',`<div class="fb ok"><b>Mock · bölüm ${m.step+1}/3.</b> Ara verme.</div>`)}}
+function mockNext(c,t){const m=running.mock;m.scores.push([running.s.skill,c,t]);m.step++;running=m;if(m.step<m.mockSteps.length)return mockStart();
+ app.innerHTML=`<section class="card"><h2>Mock tamamlandı</h2><ul class="tight">${m.scores.map(([k,c,t])=>`<li>${SK[k]}: ${t?c+'/'+t+' · band '+band(k,c,t):c+' kelime'}</li>`).join('')}</ul></section>`}
+
+go();
+</script>
+</body></html>
