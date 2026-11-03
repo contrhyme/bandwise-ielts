@@ -395,7 +395,7 @@ function vQuiz(s){
  const isL=s.skill==='L';
  let ctx='';
  if(s.passage)ctx=`<div class="passage" tabindex="0">${s.passage.map(p=>`<p><span class="pl">${p[0]}</span>${esc(p[1])}</p>`).join('')}</div>`;
- if(isL)ctx=`<div class="row"><button class="btn" id="playBtn" onclick="playScript()">▶ Kaydı dinle</button><button class="btn ghost small" onclick="stopTTS()">■ Durdur</button><label class="small muted row" style="gap:6px">Hız <select id="rate" style="width:auto"><option value="0.85">0.85×</option><option value="1" selected>1×</option><option value="1.1">1.1×</option></select></label></div><p class="small muted" id="ttsNote">Kayıt tarayıcının sesiyle bir kez okunur, gerçek sınav gibi. Önce soruları oku${s.predict?' ve her boşluk için tahminini yap':''}.</p>`;
+ if(isL)ctx=`<div class="row"><button class="btn" id="playBtn" onclick="playScript()">▶ Kaydı dinle</button><button class="btn ghost small" onclick="stopTTS()">■ Durdur</button><label class="small muted row" style="gap:6px">Hız <select id="rate" style="width:auto" onchange="if(AUD)AUD.playbackRate=+this.value"><option value="0.85">0.85×</option><option value="1" selected>1×</option><option value="1.1">1.1×</option></select></label></div><p class="small muted" id="ttsNote">Kayıt bir kez çalar, gerçek sınav gibi. Önce soruları oku${s.predict?' ve her boşluk için tahminini yap':''}.</p>`;
  const headingsBox=s.headings?`<div class="card" style="background:var(--sunk);border:0;padding:14px"><div class="eyebrow">Başlıklar</div><ul class="tight small" style="list-style:none;padding:0">${s.headings.map(h=>`<li>${esc(h)}</li>`).join('')}</ul></div>`:'';
  app.innerHTML=`${backBtn()}<section class="card" style="display:flex;flex-direction:column;gap:14px"><div class="section-h"><div><span class="tag ${s.skill}">${SK[s.skill]}</span><h2 style="margin-top:6px">${esc(s.title)}</h2></div><span class="timer" id="tm"></span></div>${ctx}${headingsBox}</section>
  <section class="card" id="qbox">${s.qs.map((q,i)=>qHTML(q,i,s)).join('')}</section>
@@ -434,8 +434,14 @@ function checkQuiz(){
  result.scrollIntoView({behavior:'smooth',block:'start'})}
 
 /* ---- TTS ---- */
-function stopTTS(){try{speechSynthesis.cancel()}catch(e){}}
-function playScript(){const s=running.s;if(!('speechSynthesis' in window)){ttsNote.textContent='Bu tarayıcı sesli okumayı desteklemiyor. Transkripti açıp hızlıca bir kez oku, sonra kapat ve cevapla.';ttsNote.insertAdjacentHTML('afterend',`<details><summary>Transkripti göster</summary><div class="script">${s.script.map(l=>`<p><b>${l[0]}:</b> ${esc(l[1])}</p>`).join('')}</div></details>`);return}
+let AUD=null;
+function stopTTS(){try{speechSynthesis.cancel()}catch(e){}if(AUD){AUD.pause();AUD=null}}
+function playScript(){const s=running.s;stopTTS();const a=new Audio('audio/'+s.id+'.mp3');a.playbackRate=+document.getElementById('rate').value;AUD=a;
+ playBtn.disabled=true;playBtn.textContent='Çalıyor…';
+ a.onended=()=>{playBtn.textContent='Kayıt bitti'};
+ a.onerror=()=>{AUD=null;playTTS()};
+ a.play().catch(()=>{AUD=null;playTTS()})}
+function playTTS(){const s=running.s;if(!('speechSynthesis' in window)){ttsNote.textContent='Bu tarayıcı sesli okumayı desteklemiyor. Transkripti açıp hızlıca bir kez oku, sonra kapat ve cevapla.';ttsNote.insertAdjacentHTML('afterend',`<details><summary>Transkripti göster</summary><div class="script">${s.script.map(l=>`<p><b>${l[0]}:</b> ${esc(l[1])}</p>`).join('')}</div></details>`);return}
  stopTTS();const vs=speechSynthesis.getVoices().filter(v=>/^en(-|_)(GB|US|AU)/i.test(v.lang));const r=+document.getElementById('rate').value;
  const gb=vs.filter(v=>/GB/i.test(v.lang));const v1=gb[0]||vs[0],v2=gb[1]||vs.find(v=>v!==v1)||v1;
  playBtn.disabled=true;playBtn.textContent='Çalıyor…';
